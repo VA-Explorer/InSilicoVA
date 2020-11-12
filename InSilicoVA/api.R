@@ -1,0 +1,11 @@
+# Create a RESTful interface in front of the InSilicoVA algorithm
+library(plumber)
+library(InterVA5)
+library(coda)
+library(rJava)
+.jinit()
+.jaddClassPath("java")
+.jaddClassPath("inst/java/Insilico.jar")
+.jpackage("InSilicoVA", lib.loc = "java/Insilico/src/")
+insilicova <- plumb("R/insilico_standard.R")
+insilicova$run(port=5002, host="0.0.0.0", swagger=TRUE)

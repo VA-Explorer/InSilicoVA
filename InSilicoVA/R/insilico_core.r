@@ -2,10 +2,10 @@
 
 
 #' Implement InSilicoVA methods with more flexible customization
-#' 
+#'
 #' This function implements InSilicoVA model. This is the lower level core function of InSilicoVA with more flexibility in customized input. For more detail of model specification, see the paper on \url{http://arxiv.org/abs/1411.3042} and the default function \code{\link{insilico}}.
-#' 
-#' 
+#'
+#'
 #' @param data see \code{\link{insilico}}
 #' @param data.type see \code{\link{insilico}}
 #' @param sci see \code{\link{insilico}}
@@ -51,10 +51,10 @@
 #' @param groupcode logical indicator of including the group code in the output causes
 #' @param ... unused arguments
 
-#' @return 
+#' @return
 #' a insilico fit object, see see \code{\link{insilico}} for more detail.
 #' @author Zehang Li, Tyler McCormick, Sam Clark
-#' 
+#'
 #' Maintainer: Zehang Li <lizehang@@uw.edu>
 #' @seealso \code{\link{plot.insilico}}, \code{\link{summary.insilico}}
 #' @references Tyler H. McCormick, Zehang R. Li, Clara Calvert, Amelia C.
@@ -63,9 +63,9 @@
 #' \url{http://arxiv.org/abs/1411.3042} \cr \emph{Working paper no. 147, Center
 #' for Statistics and the Social Sciences, University of Washington}
 #' @keywords InSilicoVA
-#' 
+#'
 #' @export insilico.fit
-insilico.fit <- function(data, data.type = c("WHO2012", "WHO2016")[1], sci = NULL, isNumeric = FALSE, updateCondProb = TRUE, keepProbbase.level = TRUE,  CondProb = NULL, CondProbNum = NULL, datacheck = TRUE, datacheck.missing = TRUE, warning.write = FALSE, directory = NULL, external.sep = TRUE, Nsim = 4000, thin = 10, burnin = 2000, auto.length = TRUE, conv.csmf = 0.02, jump.scale = 0.1, levels.prior = NULL, levels.strength = 1, trunc.min = 0.0001, trunc.max = 0.9999, subpop = NULL, java_option = "-Xmx1g", seed = 1, phy.code = NULL, phy.cat = NULL, phy.unknown = NULL, phy.external = NULL, phy.debias = NULL, exclude.impossible.cause = c("subset2", "subset", "all", "InterVA", "none")[1], impossible.combination = NULL, no.is.missing = FALSE, customization.dev = FALSE, Probbase_by_symp.dev = FALSE, probbase.dev = NULL, table.dev = NULL, table.num.dev = NULL, gstable.dev = NULL, nlevel.dev = NULL, indiv.CI = NULL, groupcode=FALSE, ...){ 
+insilico.fit <- function(data, data.type = c("WHO2012", "WHO2016")[1], sci = NULL, isNumeric = FALSE, updateCondProb = TRUE, keepProbbase.level = TRUE,  CondProb = NULL, CondProbNum = NULL, datacheck = TRUE, datacheck.missing = TRUE, warning.write = FALSE, directory = NULL, external.sep = TRUE, Nsim = 4000, thin = 10, burnin = 2000, auto.length = TRUE, conv.csmf = 0.02, jump.scale = 0.1, levels.prior = NULL, levels.strength = 1, trunc.min = 0.0001, trunc.max = 0.9999, subpop = NULL, java_option = "-Xmx1g", seed = 1, phy.code = NULL, phy.cat = NULL, phy.unknown = NULL, phy.external = NULL, phy.debias = NULL, exclude.impossible.cause = c("subset2", "subset", "all", "InterVA", "none")[1], impossible.combination = NULL, no.is.missing = FALSE, customization.dev = FALSE, Probbase_by_symp.dev = FALSE, probbase.dev = NULL, table.dev = NULL, table.num.dev = NULL, gstable.dev = NULL, nlevel.dev = NULL, indiv.CI = NULL, groupcode=FALSE, ...){
   # handling changes throughout time
   args <- as.list(match.call())
   if(!is.null(args$length.sim)){
@@ -99,7 +99,7 @@ insilico.fit <- function(data, data.type = c("WHO2012", "WHO2016")[1], sci = NUL
 	  	dir_err <- paste0(directory, "/")
 	  }else{
 	  	dir_err <- directory
-	  }	
+	  }
 	    dir.create(dir_err, showWarnings = FALSE)
   }else{
 	 dir_err <- NULL
@@ -114,7 +114,7 @@ insilico.fit <- function(data, data.type = c("WHO2012", "WHO2016")[1], sci = NUL
 InterVA.table <- function(standard = TRUE, min = NULL, table.num.dev = NULL){
 ###########################################################
 # function to return the interVA conversion table for alphabetic levels
-# also change the smallest value from 0 to user input		
+# also change the smallest value from 0 to user input
 # @param:
 #       standard: if TRUE, only need min and use interVA standard values
 #		min: minimum level to replace 0 in interVA standard
@@ -123,14 +123,14 @@ InterVA.table <- function(standard = TRUE, min = NULL, table.num.dev = NULL){
 # 		vector of interVA4 levels
 	if(standard){
 		if(is.null(min)){stop("Minimum level not specified")}
-		return(c(1, 0.8, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005, 0.002, 
-			  0.001, 0.0005, 0.0001, 0.00001, min))		
+		return(c(1, 0.8, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005, 0.002,
+			  0.001, 0.0005, 0.0001, 0.00001, min))
 	}else{
 		if(is.null(table.num.dev)){
 			stop("Numerical level table not specified")
 		}
 		if(min(table.num.dev) == 0){
-			table.num.dev[which.min(table.num.dev)] <- sort(table.num.dev, decreasing=FALSE)[2]/10			
+			table.num.dev[which.min(table.num.dev)] <- sort(table.num.dev, decreasing=FALSE)[2]/10
 		}
 		return(sort(table.num.dev, decreasing = TRUE))
 	}
@@ -145,7 +145,7 @@ scale.vec <- function(aaa, scale = NULL, scale.max = NULL, reverse = TRUE){
 # 		scale     : sum of the vector after scaling
 #       scale.max : max of the vector after scaling
 #		reverse   : whether the order should be reversed
-# @values:	
+# @values:
 #  		scaled vector
 	if(reverse){aaa <- max(aaa) + 1 - aaa}
 	bbb <- aaa
@@ -162,8 +162,8 @@ scale.vec.inter <- function(aaa, scale = NULL, scale.max = NULL){
 # 		scale     : sum of the vector after scaling
 #       scale.max : max of the vector after scaling
 #		reverse   : whether the order should be reversed
-# @values:	
-#  
+# @values:
+#
 	dist <- InterVA.table(standard = TRUE, min = 0.000001)
 	if(length(aaa) != length(dist)){stop("dimension of probbase prior not correct")}
 	bbb <- dist[order(aaa)]
@@ -175,7 +175,7 @@ change.inter <- function(x, order = FALSE, standard = TRUE, table.dev = NULL, ta
 ###########################################################
 # function to translate alphebatic matrix into numeric matrix or order matrix
 # @param:
-# 	x      : alphabetic matrix 
+# 	x      : alphabetic matrix
 #	order  : whether to change the matrix into order matrix
 #   standard: whether to use the standard table
 #   table.dev: new table of level names used high to low
@@ -188,7 +188,7 @@ change.inter <- function(x, order = FALSE, standard = TRUE, table.dev = NULL, ta
 		y <- rep(0,length(x))
 	}else{
 		y <- matrix(0, a, b)
-	}  	
+	}
 	inter.table <- InterVA.table(standard = standard, table.num.dev = table.num.dev, min = 0)
 	if(is.null(table.dev)){
 		y[x == "I"] <- inter.table[1]
@@ -215,7 +215,7 @@ change.inter <- function(x, order = FALSE, standard = TRUE, table.dev = NULL, ta
 			stop("table.dev and table.num.dev have different length")
 		}
 		for(i in 1:length(table.dev)){
-			y[x == table.dev[i]] <- inter.table[i] 
+			y[x == table.dev[i]] <- inter.table[i]
 		}
 	}
 
@@ -227,8 +227,8 @@ change.inter <- function(x, order = FALSE, standard = TRUE, table.dev = NULL, ta
     }
     if(!is.null(a)){
 		y <- matrix(y, a, b)
-	}  	
-    return(y)   
+	}
+    return(y)
 }
 
 cond.initiate <- function(probbase.order, expIni, Inter.ini, min, max){###########################################################
@@ -244,14 +244,14 @@ cond.initiate <- function(probbase.order, expIni, Inter.ini, min, max){#########
 
 		# move initial values away from 0 and 1
 		if(min == 0) min <- 0.01
-		if(max == 1) max <- 0.99		
+		if(max == 1) max <- 0.99
 		# find the number of levels
 		nlevel <- max(probbase.order)
 		# if the random levels are in log-linear fashion
 		if(expIni == TRUE){
-		randomlevels <- sort(exp(runif(nlevel, log(min), log(max))), decreasing = TRUE)	
+		randomlevels <- sort(exp(runif(nlevel, log(min), log(max))), decreasing = TRUE)
 		}else{
-		randomlevels <- sort(runif(nlevel, min, max), decreasing = TRUE)		  
+		randomlevels <- sort(runif(nlevel, min, max), decreasing = TRUE)
 		}
 		# if the random levels are initialized proportional to InterVA intervals
 		if(Inter.ini){
@@ -264,13 +264,13 @@ cond.initiate <- function(probbase.order, expIni, Inter.ini, min, max){#########
 			probrandom[which(probbase.order == i)] <- randomlevels[i]
 		}
 
-		return(probrandom)	
+		return(probrandom)
 }
 
-		
+
 removeBad <- function(data, is.numeric, subpop){
 ###########################################################
-# function to remove data with no sex/age indicators 
+# function to remove data with no sex/age indicators
 # @param:
 #		data        : as in main function
 #		is.numeric  : as in main function
@@ -278,7 +278,7 @@ removeBad <- function(data, is.numeric, subpop){
 # @values:
 # 		a list of data and subpop after removing bad data
 	if(!is.numeric){
-		data.num <- matrix(0, dim(data)[1], dim(data)[2])		
+		data.num <- matrix(0, dim(data)[1], dim(data)[2])
 		for(i in 2:dim(data)[2]){
 			temp <- toupper(data[,i])
 			temp.ind <- which(temp == "Y")
@@ -304,15 +304,15 @@ removeBad <- function(data, is.numeric, subpop){
 		}
 	}
 	if(is.null(err)) return(list(data = data, subpop = subpop, log=log))
-	if(!is.null(subpop)) return(list(data = data[-err, ], 
+	if(!is.null(subpop)) return(list(data = data[-err, ],
 									 subpop = subpop[-err], log=log))
 	if(is.null(subpop)) return(list(data = data[-err, ], subpop = NULL, log=log))
 }
 
-	
+
 removeBadV5 <- function(data, is.numeric, subpop){
 ###########################################################
-# function to remove data with no sex/age indicators 
+# function to remove data with no sex/age indicators
 # @param:
 #		data        : as in main function
 #		is.numeric  : as in main function
@@ -320,7 +320,7 @@ removeBadV5 <- function(data, is.numeric, subpop){
 # @values:
 # 		a list of data and subpop after removing bad data
 	if(!is.numeric){
-		data.num <- matrix(0, dim(data)[1], dim(data)[2])		
+		data.num <- matrix(0, dim(data)[1], dim(data)[2])
 		for(i in 2:dim(data)[2]){
 			temp <- toupper(data[,i])
 			temp.ind <- which(temp == "Y")
@@ -344,7 +344,7 @@ removeBadV5 <- function(data, is.numeric, subpop){
 		}
 	}
 	if(is.null(err)) return(list(data = data, subpop = subpop, log=log))
-	if(!is.null(subpop)) return(list(data = data[-err, ], 
+	if(!is.null(subpop)) return(list(data = data[-err, ],
 									 subpop = subpop[-err], log=log))
 	if(is.null(subpop)) return(list(data = data[-err, ], subpop = NULL, log=log))
 }
@@ -352,7 +352,7 @@ removeBadV5 <- function(data, is.numeric, subpop){
 ## Update: for the first 9 symptoms (age and gender) instead of imputing 0, we impute NA
 ##         this can also be customized to set to more symptoms...
 datacheck.interVAJava <- function(data, obj, warning.write, dir_err = NULL){
-		
+
 		# this has been updated to correspond to the 4.03 version probbase which contains minor changes from before.
 		data("probbase3", envir = environment())
 		probbase <- get("probbase3", envir  = environment())
@@ -363,7 +363,7 @@ datacheck.interVAJava <- function(data, obj, warning.write, dir_err = NULL){
 		# zero_to_missing_list <- 0
 		# 2. if only symptoms not asked due to demographics are set to missing...
 		# zero_to_missing_list <- 1:9
-		# 3. if all symptoms not asked are set to missing ---> DEFAULT 
+		# 3. if all symptoms not asked are set to missing ---> DEFAULT
 		# zero_to_missing_list <- 1 : (dim(data)[2] - 1)
 		zero_to_missing_list <- 1 : (dim(data)[2] - 1)
 
@@ -382,7 +382,7 @@ datacheck.interVAJava <- function(data, obj, warning.write, dir_err = NULL){
 
 		data.num <- matrix(0, dim(data)[1], dim(data)[2] - 1)
 		for(j in 2:dim(data)[2]){
-			data.num[which(toupper(data[, j]) == "Y"), j - 1] <- 1			
+			data.num[which(toupper(data[, j]) == "Y"), j - 1] <- 1
 			data.num[which(data[, j] == "."), j - 1] <- -1
 		}
 
@@ -405,7 +405,7 @@ datacheck.interVAJava <- function(data, obj, warning.write, dir_err = NULL){
 ## Update: for the first 9 symptoms (age and gender) instead of imputing 0, we impute NA
 ##         this can also be customized to set to more symptoms...
 datacheck.interVA5 <- function(data, obj, warning.write, probbaseV5){
-		
+
 		# this has been updated to correspond to the 4.03 version probbase which contains minor changes from before.
 		# data("probbaseV5", envir = environment())
 		# probbaseV5 <- get("probbaseV5", envir  = environment())
@@ -449,7 +449,7 @@ removeExt <- function(data, prob.orig, is.Numeric, subpop, subpop_order_list, ex
 # @values:
 #	   data: after removing external death
 #	   prob.orig: after deleting external symptoms
-#	   exts: external death list		
+#	   exts: external death list
 	extSymps <- external.symps
 	extCauses <- external.causes
 	# extract subset of data for external symptoms
@@ -463,7 +463,7 @@ removeExt <- function(data, prob.orig, is.Numeric, subpop, subpop_order_list, ex
 		pos <- "Y"
 	}
 	ext.where <- which(apply(extData, 1, function(x){
-									length(which(x == pos)) }) > 0)	
+									length(which(x == pos)) }) > 0)
 	extData <- as.matrix(extData[ext.where, ])
 	ext.id <- data[ext.where, 1]
 	ext.sub <- subpop[ext.where]
@@ -477,7 +477,7 @@ removeExt <- function(data, prob.orig, is.Numeric, subpop, subpop_order_list, ex
 	extData[which(extData[,10] == pos),c(2,4,5,6,8)] <- neg
 	extData[which(extData[,11] == pos),c(3,4,8,9)] <- neg
 	extData[which(extData[,12] == pos),c(4,7,8)] <- neg
-	
+
 	# initialize with all "unspecified ext causes"
 	ext.cod <- rep(extCauses[11], length(ext.id))
 	# begin checking symptoms
@@ -507,7 +507,7 @@ removeExt <- function(data, prob.orig, is.Numeric, subpop, subpop_order_list, ex
 	# delete death confirmed external
 	if(length(ext.where) > 0){
 		data <- data[-ext.where, ]
-	}	
+	}
 	if(length(extSymps) > 0) data <- data[, -(extSymps + 1)]
 	# delete the causes from probbase
 	prob.orig <- prob.orig[ -(extSymps), -(extCauses)]
@@ -521,7 +521,7 @@ removeExt <- function(data, prob.orig, is.Numeric, subpop, subpop_order_list, ex
 				for(j in 1:length(extCauses)){
 					ext.csmf[[i]][j] <- length(which(ext.cod.temp == extCauses[j]))
 				}
-				ext.csmf[[i]] <- ext.csmf[[i]]/length(which(subpop == subpop_order_list[i]))		
+				ext.csmf[[i]] <- ext.csmf[[i]]/length(which(subpop == subpop_order_list[i]))
 			}
 		}
 	}else{
@@ -529,14 +529,14 @@ removeExt <- function(data, prob.orig, is.Numeric, subpop, subpop_order_list, ex
 		for(i in 1:length(extCauses)){
 			ext.csmf[i] <- length(which(ext.cod == extCauses[i]))
 		}
-		ext.csmf <- ext.csmf/N.all		
+		ext.csmf <- ext.csmf/N.all
 	}
 	if(length(ext.where) > 0) subpop <- subpop[-ext.where]
-	return(list(data = data, 
+	return(list(data = data,
 				subpop = subpop,
-				prob.orig = prob.orig, 
+				prob.orig = prob.orig,
 				ext.sub  = ext.sub,
-				ext.id = ext.id, 
+				ext.id = ext.id,
 				ext.cod = ext.cod,
 				ext.csmf = ext.csmf))
 }
@@ -550,7 +550,7 @@ removeExtV5 <- function(data, prob.orig, csmf.orig, is.Numeric, subpop, subpop_o
 # @values:
 #	   data: after removing external death
 #	   prob.orig: after deleting external symptoms
-#	   exts: external death list		
+#	   exts: external death list
 	extSymps <- external.symps
 	extCauses <- external.causes
 	# extract subset of data for external symptoms
@@ -564,7 +564,7 @@ removeExtV5 <- function(data, prob.orig, csmf.orig, is.Numeric, subpop, subpop_o
 		pos <- "Y"
 	}
 	ext.where <- which(apply(extData, 1, function(x){
-									length(which(x == pos)) }) > 0)	
+									length(which(x == pos)) }) > 0)
 	extData <- as.matrix(extData[ext.where, ])
 	ext.id <- data[ext.where, 1]
 	ext.sub <- subpop[ext.where]
@@ -583,7 +583,7 @@ removeExtV5 <- function(data, prob.orig, csmf.orig, is.Numeric, subpop, subpop_o
 			}
 			probs[i, ] <- probs[i, ] / sum(probs[i, ])
 		}
-		ext.prob <- probs	
+		ext.prob <- probs
 		# delete death confirmed external
 		data <- data[-ext.where, ]
 	}else{
@@ -597,14 +597,14 @@ removeExtV5 <- function(data, prob.orig, csmf.orig, is.Numeric, subpop, subpop_o
 		}
 		ext.prob <- matrix(0, dim(extData)[1], length(external.causes))
 
-		return(list(data = data, 
+		return(list(data = data,
 				subpop = subpop,
-				prob.orig = prob.orig, 
+				prob.orig = prob.orig,
 				ext.sub  = ext.sub,
-				ext.id = ext.id, 
+				ext.id = ext.id,
 				ext.prob = ext.prob,
 				ext.cod = NULL,
-				ext.csmf = ext.csmf, 
+				ext.csmf = ext.csmf,
 				negate = negate))
 	}
 
@@ -616,21 +616,21 @@ removeExtV5 <- function(data, prob.orig, csmf.orig, is.Numeric, subpop, subpop_o
 			ext.csmf[[i]] <- rep(0, length(extCauses))
 			ext.prob.temp <- ext.prob[which(ext.sub == subpop_order_list[i]), , drop = FALSE]
 			if(!is.null(ext.prob.temp)){
-					ext.csmf[[i]] <- apply(ext.prob.temp, 2, mean) * dim(ext.prob.temp)[1] / length(which(subpop == subpop_order_list[i]))		
+					ext.csmf[[i]] <- apply(ext.prob.temp, 2, mean) * dim(ext.prob.temp)[1] / length(which(subpop == subpop_order_list[i]))
 			}
 		}
 	}else{
-		ext.csmf <- apply(ext.prob, 2, mean) * length(ext.id) / N.all	
+		ext.csmf <- apply(ext.prob, 2, mean) * length(ext.id) / N.all
 	}
 	if(length(ext.where) > 0) subpop <- subpop[-ext.where]
-	return(list(data = data, 
+	return(list(data = data,
 				subpop = subpop,
-				prob.orig = prob.orig, 
+				prob.orig = prob.orig,
 				ext.sub  = ext.sub,
-				ext.id = ext.id, 
+				ext.id = ext.id,
 				ext.prob = ext.prob,
 				ext.cod = NULL,
-				ext.csmf = ext.csmf, 
+				ext.csmf = ext.csmf,
 				negate = negate))
 }
 
@@ -641,7 +641,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 #	   various java arguments
 # 	   Java output
 # @values:
-#		list of variables parsed   
+#		list of variables parsed
    	counter <- 1
     csmf.sub <- NULL
     p.hat <- NULL
@@ -657,7 +657,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
         csmf.sub <- vector("list", N_sub.j)
         for(sub in 1:N_sub.j){
             csmf.sub[[sub]] <- fit[counter : (counter + C.j * N_thin - 1)]
-            csmf.sub[[sub]] <- matrix(csmf.sub[[sub]], nrow = N_thin, ncol = C.j, 
+            csmf.sub[[sub]] <- matrix(csmf.sub[[sub]], nrow = N_thin, ncol = C.j,
             						  byrow = TRUE)
             counter <- counter + C.j * N_thin
         }
@@ -666,18 +666,18 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
         p.hat <- matrix(p.hat, nrow = N_thin, ncol = C.j, byrow = TRUE)
         counter <- counter + C.j * N_thin
     }
-    
+
     # extract individual probabilities
     p.indiv <- fit[counter : (counter + N.j * C.j - 1)]
     p.indiv <- matrix(p.indiv, nrow = N.j, ncol = C.j, byrow = TRUE)
     counter <- counter + N.j * C.j
 
-    # extract probbase 
+    # extract probbase
     if(pool.j != 0){
         probbase.gibbs <- fit[counter:(counter + S.j * C.j * N_thin - 1)]
         # array(..., dim =c(a,b,c))
         # what it does it for each c, fill by column
-        # i.e. c(x[1,1,1], x[2, 1, 1], x[1, 2, 1], ...) 
+        # i.e. c(x[1,1,1], x[2, 1, 1], x[1, 2, 1], ...)
         # i.e. in Java, loop in the order of C.j -> S.j -> N_thin
         probbase.gibbs <- array(probbase.gibbs, dim = c(N_thin, S.j, C.j))
         counter <- counter + S.j * C.j * N_thin
@@ -688,20 +688,20 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
     }
 
     # find last time configurations
-    mu_last <- matrix(fit[counter:(counter + N_sub.j * C.j - 1)], 
+    mu_last <- matrix(fit[counter:(counter + N_sub.j * C.j - 1)],
                      nrow = N_sub.j, ncol = C.j, byrow = TRUE)
     counter <- counter + N_sub.j * C.j
     sigma2_last <-fit[counter:(counter + N_sub.j - 1)]
-    counter <- counter + N_sub.j  
-    theta_last <-  matrix(fit[counter:(counter + N_sub.j * C.j - 1)], 
+    counter <- counter + N_sub.j
+    theta_last <-  matrix(fit[counter:(counter + N_sub.j * C.j - 1)],
                          nrow = N_sub.j, ncol = C.j, byrow = TRUE)
-    counter <- counter + N_sub.j * C.j     	
-    
+    counter <- counter + N_sub.j * C.j
 
-    out <- list(csmf.sub = csmf.sub, p.hat = p.hat, p.indiv = p.indiv, 
-                probbase.gibbs = probbase.gibbs, 
-                levels.gibbs = levels.gibbs, 
-                mu.last = mu_last, sigma2.last = sigma2_last, 
+
+    out <- list(csmf.sub = csmf.sub, p.hat = p.hat, p.indiv = p.indiv,
+                probbase.gibbs = probbase.gibbs,
+                levels.gibbs = levels.gibbs,
+                mu.last = mu_last, sigma2.last = sigma2_last,
                 theta.last = theta_last)
 
     return(out)
@@ -725,7 +725,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 			misstmp <- which(data[,i] %in% c("Y", "y", "N", "n") == FALSE)
 			if(length(misstmp) > 0) data[misstmp, i] <- "."
 		}
-	} 
+	}
 	if(no.is.missing){
 		data[data == ""] <- "."
 	}
@@ -754,7 +754,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	if(is.null(Nsim) || is.null(thin) || is.null(burnin)){
 		stop("Length of chain/thinning/burn-in not specified")
 	}
-	
+
 	##----------------------------------------------------------##
 	if(keepProbbase.level && Probbase_by_symp.dev){
 		stop("keepProbbase.level and Probbase_by_symp.dev cannot be set to TRUE simultaneously.")
@@ -769,14 +769,14 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 
 	##----------------------------------------------------------##
 	## initialize key data dependencies
-	##----------------------------------------------------------##	
+	##----------------------------------------------------------##
 	if(data.type == "WHO2012"){
 		data("probbase3", envir = environment())
 		probbase<- get("probbase3", envir  = environment())
 		# fix symptom name that has been changed in 4.03
 		probbase[which(probbase=="sk_les")] <- "skin_les"
 		data("causetext", envir = environment())
-		causetext<- get("causetext", envir  = environment())		
+		causetext<- get("causetext", envir  = environment())
 	}else if(data.type == "WHO2016"){
 	    if (is.null(sci)) {
 	        data("probbaseV5", envir = environment())
@@ -798,7 +798,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	    probbase <- probbaseV5
 	    message("Using Probbase version:  ", probbaseV5Version)
 		data("causetextV5", envir = environment())
-		causetext<- get("causetextV5", envir  = environment())		
+		causetext<- get("causetextV5", envir  = environment())
 	}
 	 if (groupcode) {
         causetext <- causetext[, -2]
@@ -806,9 +806,9 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
     else {
         causetext <- causetext[, -3]
     }
-	
+
 	##----------------------------------------------------------##
-	## Extract sub-populations		
+	## Extract sub-populations
 	##----------------------------------------------------------##
 	# get subpopulation if it's a columnname
   	if(methods::is(subpop, "list") || length(subpop) == 1){
@@ -827,14 +827,14 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
   	# make sure they are not factors but characters
   	if(!is.null(subpop)){
   		subpop <- as.character(subpop)
-  	} 
+  	}
   	if(length(unique(subpop)) == 1){
   			subpop <- NULL
   			warning("Only one level in subpopulation, running the dataset as one population")
   	}
 
 	##----------------------------------------------------------##
-	## without developer customization		
+	## without developer customization
 	##----------------------------------------------------------##
 	if(!customization.dev ){
 
@@ -898,17 +898,17 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 		}else{
 			stop("Wrong data.type, need to be WHO2012 or WHO2016")
 		}
-	  	
-	  
-	    
+
+
+
 	    count.changelabel = 0
 	    for(i in 1:length(valabels)){
 	        if(tolower(colnames(data)[i]) != tolower(valabels)[i]){
-	            warning(paste("Input columne '", colnames(data)[i], "' does not match InterVA standard: '", 
+	            warning(paste("Input columne '", colnames(data)[i], "' does not match InterVA standard: '",
 	                    valabels[i], "'", sep = ""),
 	                    call. = FALSE, immediate. = TRUE)
 	            count.changelabel = count.changelabel + 1
-	        }         
+	        }
 	    }
 	    if(count.changelabel > 0){
 	        warning(paste(count.changelabel, "column names changed in input. \n If the change in undesirable, please change in the input to match standard InterVA4 input format.\n"), call. = FALSE, immediate. = TRUE)
@@ -919,15 +919,15 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	  		prob.orig <- CondProb
 	  		exclude.impossible.cause <- "none"
 	  		vacauses <- colnames(CondProbNum)
-	  		if(is.null(vacauses)) vacauses <- paste0("Cause", 1:dim(CondProbNum)[2])	  	
+	  		if(is.null(vacauses)) vacauses <- paste0("Cause", 1:dim(CondProbNum)[2])
 	  	}
 	  	if(!is.null(CondProbNum)){
-	  		prob.orig <- CondProbNum 
-	  		updateCondProb <- FALSE		
+	  		prob.orig <- CondProbNum
+	  		updateCondProb <- FALSE
 	  		vacauses <- colnames(CondProbNum)
-	  		if(is.null(vacauses)) vacauses <- paste0("Cause", 1:dim(CondProbNum)[2])	
+	  		if(is.null(vacauses)) vacauses <- paste0("Cause", 1:dim(CondProbNum)[2])
 	  	}
-	 
+
 		##-----------------------------------------------------##
 		## remove bad data happens before taking into missing
 		## (i.e. data without age/sex or has no real symptoms)
@@ -936,7 +936,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 				tmp <- removeBad(data, isNumeric, subpop)
 				if(warning.write){
 					cat(paste("Error log built for InSilicoVA", Sys.time(), "\n"),file=paste0(dir_err, "errorlog_insilico.txt"),append = FALSE)
-					 cat(tmp$errorlog, sep="\n", file=paste0(dir_err, "errorlog_insilico.txt"), 
+					 cat(tmp$errorlog, sep="\n", file=paste0(dir_err, "errorlog_insilico.txt"),
 					 	append=TRUE)
 				}
 			}else if(data.type == "WHO2016"){
@@ -950,14 +950,14 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 		  	}else{
 			  	subpop_order_list <- sort(unique(subpop))
 		  	}
-	  	}else{	  			    
+	  	}else{
 	  		errorlog <- NULL
 	  	}
 
   	}else{
 		##----------------------------------------------------------##
-		## with developer customization		
-		##----------------------------------------------------------##	
+		## with developer customization
+		##----------------------------------------------------------##
 		# only match columns exactly as in probbase
 		Sys_Prior <- rep(1, dim(probbase.dev)[2])
 	  	correct_names <- rownames(probbase.dev)
@@ -967,8 +967,8 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	  	}else{
 	  		data <- data[, c(1, match(correct_names, colnames(data)))]
 	  	}
-	    
-	    prob.orig <- probbase.dev	
+
+	    prob.orig <- probbase.dev
   		valabels <- colnames(data)
 	    vacauses <- gstable.dev
 	    external.causes <- NULL
@@ -977,7 +977,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 
   	# standardize to Upper case
 	# WHO 2016 format should have been corrected to have no NA at this point
-	data <- data.frame(lapply(data, as.character), 
+	data <- data.frame(lapply(data, as.character),
 					   stringsAsFactors=FALSE)
 	for(j in 2:dim(data)[2]){
 		data[is.na(data[, j]), j] <- ""
@@ -996,15 +996,15 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 		}else if(data.type == "WHO2016"){
 			# code missing as NA
 			checked <- datacheck.interVA5(data, obj, warning.write, probbase)
-			
+
 			warning <- checked$warning
 			if(warning.write){
 				 cat(paste("Error & warning log built for InSilicoVA", Sys.time(), "\n"),file=paste0(dir_err, "errorlog_insilico.txt"),append = FALSE)
-				 cat(errorlog, 
-				 	paste("\n", "the following data discrepancies were identified and handled:", "\n"), 
-				 	checked$firstPass, 
-				 	paste("\n", "Second pass", "\n"), 
-				 	checked$secondPass, sep="\n", file=paste0(dir_err, "errorlog_insilico.txt"), 
+				 cat(errorlog,
+				 	paste("\n", "the following data discrepancies were identified and handled:", "\n"),
+				 	checked$firstPass,
+				 	paste("\n", "Second pass", "\n"),
+				 	checked$secondPass, sep="\n", file=paste0(dir_err, "errorlog_insilico.txt"),
 				 	append=TRUE)
 			}
 			checked <- checked$checked
@@ -1043,7 +1043,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
   		if(data.type == "WHO2012"){
   		externals <- removeExt(data,prob.orig, isNumeric, subpop, subpop_order_list, external.causes, external.symps)
 
-  		
+
   		}else{
   			csmf.orig <- probbase[1, -(1:20)]
 			externals <- removeExtV5(data,prob.orig, csmf.orig, isNumeric, subpop, subpop_order_list, external.causes, external.symps, negate)
@@ -1055,7 +1055,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
   		if(dim(data)[1] == 0){
   			message("All deaths are assigned external causes. A list of external causes is returned instead of insilico object.")
   			if(data.type == "WHO2012"){
-  				out <- data.frame(ID = externals$ext.id, 
+  				out <- data.frame(ID = externals$ext.id,
   							  causes = vacauses[externals$ext.cod])
 
   			}else if(data.type == "WHO2016"){
@@ -1073,41 +1073,41 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
    	missing.all <- NULL
 	## add the all missing items that are not in missing list
 	for(i in 1:(dim(data)[2]-1)){
-		if(length(which(data[,i+1] == ".")) >= 1 * dim(data)[1] && 
+		if(length(which(data[,i+1] == ".")) >= 1 * dim(data)[1] &&
 		   !((i+1) %in% missing.all)){
 			missing.all <- sort(c(missing.all, i))
 		}
 	}
 	if(length(missing.all) > 0){
-		warning(paste(length(missing.all), "symptom missing completely and added to missing list", 
-			"\nList of missing symptoms: \n", 
-			paste( probbase[missing.all + 1, 2-as.numeric(data.type == "WHO2016")], collapse = ", ")), 
-		call. = FALSE, immediate. = TRUE)		
+		warning(paste(length(missing.all), "symptom missing completely and added to missing list",
+			"\nList of missing symptoms: \n",
+			paste( probbase[missing.all + 1, 2-as.numeric(data.type == "WHO2016")], collapse = ", ")),
+		call. = FALSE, immediate. = TRUE)
 	}
 	## remove all missing symptoms from both data and probbase
-	if(!is.null(missing.all)){	
+	if(!is.null(missing.all)){
 		data <- data[, -(missing.all + 1)]
-		prob.orig <- prob.orig[-missing.all, ]	
+		prob.orig <- prob.orig[-missing.all, ]
 		if(!is.null(negate)) negate <- negate[-missing.all]
-	}	
+	}
 
 
 	##----------------------------------------------------------##
    	## check interVA rules, ignoring missing at this step,
-   	## since missing could be rewritten 
+   	## since missing could be rewritten
    	if((!datacheck.missing) && datacheck){
 		message("check missing after removing symptoms are disabled...\n")
 	}
 
 
-	##----------------------------------------------------------##	
+	##----------------------------------------------------------##
 	# initiate numerical matrix "cond.prob.true"
-	# obtained from "prob.orig", which is could be one of the following: 
+	# obtained from "prob.orig", which is could be one of the following:
 	#	1. level matrix: if CondProbNum is NULL
 	#   2. already a numerical matrix: if otherwise
 
 	##----------------------------------------------------------##
-	## without developer customization		
+	## without developer customization
 	##----------------------------------------------------------##
 	if(!customization.dev){
 	  	## translate original probbase into InterVA interpreted values
@@ -1120,7 +1120,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	 	}
 	}else{
 		##----------------------------------------------------------##
-		## with developer customization		
+		## with developer customization
 		##----------------------------------------------------------##
 	  	if(updateCondProb){
 	 		prob.order <- change.inter(prob.orig, order = TRUE, standard = FALSE, table.dev = table.dev, table.num.dev = table.num.dev)
@@ -1129,7 +1129,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	  		cond.prob.true <- prob.orig
 	 		prob.order <- matrix(1, dim(prob.orig)[1], dim(prob.orig)[2])
 	  	}
- 	 } 	
+ 	 }
 	##----------------------------------------------------------##
   	# get data dimensions
   	## number of data
@@ -1141,7 +1141,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	## number of causes
 	C <- dim(cond.prob.true)[2]
 
-	## external causes have been removed 
+	## external causes have been removed
 	if(external.sep){
 		vacauses.current <- vacauses[-external.causes]
 	}else{
@@ -1152,7 +1152,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	## check impossible pairs of symptoms and causes
   	## check only first demographic symptoms (7 age + 2 gender)
   	## also the value saved is the index (starting from 1)
-  	## format: 
+  	## format:
   	##		   (ss, cc, 0) if P(cc | ss = y) = 0
   	##         (ss, cc, 1) if P(cc | ss = n) = 0
   	##
@@ -1160,10 +1160,10 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	  	impossible <- NULL
 	  	if(exclude.impossible.cause == "subset2" || exclude.impossible.cause == "subset"){
 	  		if(data.type == "WHO2012"){
-		  	demog.set <- c("elder", "midage", "adult", "child", "under5", "infant", "neonate", "male", "female", 
+		  	demog.set <- c("elder", "midage", "adult", "child", "under5", "infant", "neonate", "male", "female",
 		  		"magegp1", "magegp2", "magegp3", "died_d1", "died_d23", "died_d36", "died_w1", "no_life")
 	  		}else{
-	  			demog.set <- c("i019a", "i019b", "i022a", "i022b", "i022c", "i022d", "i022e", "i022f", "i022g", 
+	  			demog.set <- c("i019a", "i019b", "i022a", "i022b", "i022c", "i022d", "i022e", "i022f", "i022g",
 	  						"i022h", "i022i", "i022j", "i022k", "i022l", "i022m", "i022n", "i114o")
 	  		}
 	  	}else{
@@ -1182,7 +1182,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 				}
 			}
 		}
-		
+
 		# Add prematurity fix
 		if(exclude.impossible.cause  == "subset2"){
 			if(data.type == "WHO2012"){
@@ -1193,17 +1193,17 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	  		}else{
 	  			s.set <- "i367a"
 				ss <- match(s.set, colnames(data)[-1])
-				# if negated, then reverse 
-	  			val.onlyprem <- ifelse(negate[ss], as.integer(1), as.integer(0)) 
-	  			val.notprem <- ifelse(negate[ss], as.integer(0), as.integer(1)) 
+				# if negated, then reverse
+	  			val.onlyprem <- ifelse(negate[ss], as.integer(1), as.integer(0))
+	  			val.notprem <- ifelse(negate[ss], as.integer(0), as.integer(1))
 	  		}
 	 	 	cc.onlyprem <- match("Prematurity", vacauses.current)
 	 	 	cc.notprem <- match("Birth asphyxia", vacauses.current)
 			if(!is.na(ss) && !is.na(cc.onlyprem)) impossible <- rbind(impossible, c(as.integer(cc.onlyprem), as.integer(ss), val.onlyprem))
 			if(!is.na(ss) && !is.na(cc.notprem)) impossible <- rbind(impossible, c(as.integer(cc.notprem), as.integer(ss), val.notprem))
-		} 
+		}
 
-		impossible <- as.matrix(impossible)	
+		impossible <- as.matrix(impossible)
 
 	}else if(!is.null(impossible.combination) && exclude.impossible.cause){
 		impossible <- NULL
@@ -1221,12 +1221,12 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	}
 
 
-	
+
 	## physician debias data
 	if(!is.null(phy.debias)){
 	   phy.code <- phy.debias$code.debias
 	}
-	
+
 	## physician codes
 	if(!is.null(phy.code)){
 
@@ -1247,7 +1247,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 
 		if(!(phy.unknown %in% colnames(phy.code))){
 			stop("Cannot find Unknown category in phy.code")
-		}		
+		}
 		# causes in the physician coded categories
 		cause.phy <- unique(phy.cat[, 2])
 		if(phy.unknown %in% cause.phy){
@@ -1283,8 +1283,8 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 		matchid <- match(phy.code[, 1], data[, 1])
 		# Added varible for java:
 		#    assigned cause
-		assignment <- matrix(0, N, C.phy)	
-		# first column is unknown	
+		assignment <- matrix(0, N, C.phy)
+		# first column is unknown
 		assignment[, 1] <- 1
 		# remove unmatched physician coding
 		if(length(which(is.na(matchid))) > 0){
@@ -1292,44 +1292,44 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 			matchid <- matchid[-which(is.na(matchid))]
 		}
 		assignment[matchid, ] <- as.matrix(phy.code[, -1])
-		
+
 		#normalize assignment
 		for(index in 1:dim(assignment)[1]){
 			assignment[index, ] <- assignment[index, ] / sum(assignment[index, ])
 		}
-		
+
 		if(external.sep){
-			message(paste(length(matchid), 
-				"deaths found known physician coding after removing deaths from external causes.\n"))			
+			message(paste(length(matchid),
+				"deaths found known physician coding after removing deaths from external causes.\n"))
 		}else{
-			message(paste(length(matchid), 
+			message(paste(length(matchid),
  				"deaths found known physician coding.\n"))
 		}
 	}else{
 		# if no physician coding, everything is unknown
 		C.phy <- 1
-		assignment <- matrix(0, N, C.phy)	
+		assignment <- matrix(0, N, C.phy)
 		assignment[, 1] <- 1
 		vacauses.broader <- 1:length(vacauses.current)
 	}
-	
+
 	##---------------------------------------------------------------##
 	## Specify the prior for truncated beta distribution
-	prior.b.cond = trunc(1.5 * N)			
+	prior.b.cond = trunc(1.5 * N)
 	#prior.b.cond = N
 
 	if(keepProbbase.level){
 		# if update only table of interpretation, need stronger prior
 		levelcount <- table(cond.prob.true)
 		# levels.strength should be multiplied here to avoid truncating to 0
-		prior.b.cond <- trunc(prior.b.cond * median(levelcount) * levels.strength) 
+		prior.b.cond <- trunc(prior.b.cond * median(levelcount) * levels.strength)
 	}else{
 		prior.b.cond <- trunc(prior.b.cond * levels.strength)
 	}
 
 	if(is.null(levels.prior)){
-			levels.prior <- scale.vec.inter(seq(1,nlevel), 
-					scale.max = prior.b.cond * 0.99)		
+			levels.prior <- scale.vec.inter(seq(1,nlevel),
+					scale.max = prior.b.cond * 0.99)
 	}
 	##---------------------------------------------------------------##
 	## get sub-population information
@@ -1350,14 +1350,14 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 		N.sub <- length(sublist)
 	}
 	##---------------------------------------------------------------##
-  	## initiate indicator matrix	
+  	## initiate indicator matrix
 	indic <- matrix(0, N, S)
 	id <- data[, 1]
 	## convert "Y" to 1 in indicator matrix
 	## if numeric data, just use data metrix without ID
 	if(isNumeric){
 		indic <- data[, -1]
-	}else{		
+	}else{
 		for(i in 1:S){
 			temp <- data[,i+1]
 			temp.ind <- which(temp == "Y")
@@ -1378,7 +1378,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 			indic[temp.ind, i] <- -1
 		}
 	}
-	## if data contains subpopulation, 
+	## if data contains subpopulation,
 	## for complete missing within subpopulation,
 	##	   change missing from -1 to -2 to separate.
 	if(!is.null(subpop)){
@@ -1386,9 +1386,9 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 			for(i in 1:S){
 				temp <- indic[which(subbelong == j), i]
 				if(length(which(temp == -1)) == length(temp)){
-					indic[which(subbelong == j), i] <- -2	
+					indic[which(subbelong == j), i] <- -2
 				}
-			}			
+			}
 		}
 	}
 
@@ -1414,7 +1414,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
   	}
 	if(external.sep){
 		csmf.prior <- csmf.prior[-external.causes]
-		if(method == "normal" && length(mu) != C){ 
+		if(method == "normal" && length(mu) != C){
 			mu <- mu[-external.causes]
 		}else if(method == "dirichlet" && length(alpha) != C){
 			alpha <- alpha[-external.causes]
@@ -1422,7 +1422,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	}
 	##---------------------------------------------------------------##
 	## initialize probbase and start java
-	
+
 	if(updateCondProb){
 		cond.prob <- cond.initiate(prob.order, expIni = TRUE, Inter.ini = TRUE, min = trunc.min, max = trunc.max)
     }else if(is.null(CondProbNum)){
@@ -1437,14 +1437,14 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
     S.j <- as.integer(S)
     C.j <- as.integer(C)
     probbase.j <- .jarray(as.matrix(cond.prob), dispatch=TRUE)
-    
+
     # at this stage, there are a few possibilities:
     #  customization.dev & updateCondProb: need to check existing levels
     #  !updateCondProb: do nothing
     #  !is.null(CondProb): need to check existing levels
-    #  
+    #
     if((customization.dev && updateCondProb) || !is.null(CondProb)){
-    	
+
 		# get new numerical levels
     	if(customization.dev){
 	    	dist <- InterVA.table(standard = FALSE, table.num.dev = table.num.dev)
@@ -1453,7 +1453,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
     	}
     	# check existence of each level's index in prob.order
     	level.exist <- seq(1:length(dist)) %in% unique(as.vector(prob.order))
-    	
+
     	# update order matrix
     	prob.order.new <- prob.order
     	for(i in 1:length(dist)){
@@ -1475,7 +1475,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
     	N_level.j <- as.integer(nlevel)
     	dist <- InterVA.table(standard = TRUE, min = 0)
 	}
-   
+
     level_values.j <- .jarray(dist, dispatch = TRUE)
     prior_a.j <- .jarray(levels.prior , dispatch = TRUE)
     prior_b.j <- prior.b.cond
@@ -1492,7 +1492,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
     burn.j <- as.integer(burnin)
     thin.j <- as.integer(thin)
     mu.j <- .jarray(mu, dispatch = TRUE)
-    sigma2.j <- sigma2 
+    sigma2.j <- sigma2
     isUnix <-  .Platform$OS.type == "unix"
 
     assignment.j <- .jarray(as.matrix(assignment), dispatch = TRUE)
@@ -1518,45 +1518,45 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 	theta.last.j <- .jarray(matrix(0, N_sub.j, C), dispatch = TRUE)
 	keepProb.j <- !updateCondProb
 
-	ins <- try( 
-		.jcall(obj, "[D", "Fit", 
-		dimensions.j, 
-		probbase.j, probbase_order.j, level_values.j, 
-		prior_a.j, prior_b.j, jumprange.j, trunc_min.j, trunc_max.j, 
-		indic.j, subpop.j, contains_missing.j, pool.j, 
-		seed.j, N_gibbs.j, burn.j, thin.j, 
-		mu.j, sigma2.j, isUnix, keepProb.j, 
-		isAdded, mu.last.j, sigma2.last.j, theta.last.j, 
-		C.phy.j, vacauses.broader.j, assignment.j, impossible.j) 
+	ins <- try(
+		.jcall(obj, "[D", "Fit",
+		dimensions.j,
+		probbase.j, probbase_order.j, level_values.j,
+		prior_a.j, prior_b.j, jumprange.j, trunc_min.j, trunc_max.j,
+		indic.j, subpop.j, contains_missing.j, pool.j,
+		seed.j, N_gibbs.j, burn.j, thin.j,
+		mu.j, sigma2.j, isUnix, keepProb.j,
+		isAdded, mu.last.j, sigma2.last.j, theta.last.j,
+		C.phy.j, vacauses.broader.j, assignment.j, impossible.j)
 		, FALSE)
 	if(is(ins, "try-error")){
-		java_message()	
+		java_message()
 		stop()
 	}
 
     # one dimensional array is straightforward
     fit <- ins
     # fit <-  .jeval(ins, .jevalArray))
-##---------------------------------------------------------------------------------##	
+##---------------------------------------------------------------------------------##
 ##
 ## save data from java output to proper format
-##    
+##
     results <- ParseResult(N_sub.j, C.j, S.j, N_level.j, pool.j, fit)
 	# check convergence
     conv <- tryCatch({
 					   if(!is.null(results$csmf.sub)){
-							csmf.diag(results$csmf.sub, conv.csmf, 
-								              test = "heidel", verbose = FALSE) 	
+							csmf.diag(results$csmf.sub, conv.csmf,
+								              test = "heidel", verbose = FALSE)
 				    	}else{
-				    		csmf.diag(results$p.hat, conv.csmf, 
-								              test = "heidel", verbose = FALSE) 
+				    		csmf.diag(results$p.hat, conv.csmf,
+								              test = "heidel", verbose = FALSE)
 				    	}
 				}, error = function(condition) {
 				    print("error checking diagnostics")
 				    FALSE
 				})
     # check convergence and if the chain needs to run longer
-    if(auto.length){	
+    if(auto.length){
     	# if not converge, run again, max number of runs = 3
     	add <- 1
     	while(!conv && add < 3){
@@ -1565,7 +1565,7 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
     		theta.last.j <- .jarray(as.matrix(results$theta.last), dispatch = TRUE)
     		# same length as previous chain if added the first time
     		# double the length	if the second time
-    		Nsim <- Nsim * 2 
+    		Nsim <- Nsim * 2
     		burnin <- Nsim / 2
     		N_gibbs.j <- as.integer(trunc(N_gibbs.j * (2^(add-1))))
 			burn.j <- as.integer(0)
@@ -1574,14 +1574,14 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
 			message(paste("Not all causes with CSMF >", conv.csmf, "are convergent.\n"))
     		message(paste("Increase chain length with another", N_gibbs.j, "iterations\n"))
     		obj <- .jnew("sampler/InsilicoSampler2")
-    		ins  <- .jcall(obj, "[D", "Fit", 
-						dimensions.j, 
-						probbase.j, probbase_order.j, level_values.j, 
-						prior_a.j, prior_b.j, jumprange.j, trunc_min.j, trunc_max.j, 
-						indic.j, subpop.j, contains_missing.j, pool.j, 
-						seed.j, N_gibbs.j, burn.j, thin.j, 
-						mu.j, sigma2.j, isUnix, keepProb.j, 
-						TRUE, mu.last.j, sigma2.last.j, theta.last.j, 
+    		ins  <- .jcall(obj, "[D", "Fit",
+						dimensions.j,
+						probbase.j, probbase_order.j, level_values.j,
+						prior_a.j, prior_b.j, jumprange.j, trunc_min.j, trunc_max.j,
+						indic.j, subpop.j, contains_missing.j, pool.j,
+						seed.j, N_gibbs.j, burn.j, thin.j,
+						mu.j, sigma2.j, isUnix, keepProb.j,
+						TRUE, mu.last.j, sigma2.last.j, theta.last.j,
 						C.phy.j, vacauses.broader.j, assignment.j, impossible.j)
     		# one dimensional array is straightforward
     		fit.add <- ins
@@ -1592,23 +1592,23 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
     		add = add + 1
     		# check convergence
 	    	if(!is.null(results$csmf.sub)){
-				conv <- csmf.diag(results$csmf.sub, conv.csmf, 
-					              test = "heidel", verbose = FALSE) 	
+				conv <- csmf.diag(results$csmf.sub, conv.csmf,
+					              test = "heidel", verbose = FALSE)
 	    	}else{
-	    		conv <- csmf.diag(results$p.hat, conv.csmf, 
-					              test = "heidel", verbose = FALSE) 
+	    		conv <- csmf.diag(results$p.hat, conv.csmf,
+					              test = "heidel", verbose = FALSE)
 	    	}
     	}
     }
-    ## if still not convergent 
+    ## if still not convergent
     if(!conv){
     	message(paste("Not all causes with CSMF >", conv.csmf, "are convergent.\n",
     			  "Please check using csmf.diag() for more information.\n"))
     }
-    csmf.sub  <- results$csmf.sub 
+    csmf.sub  <- results$csmf.sub
     p.hat  <- results$p.hat
-    p.indiv  <- results$p.indiv 
-    probbase.gibbs  <- results$probbase.gibbs 
+    p.indiv  <- results$p.indiv
+    probbase.gibbs  <- results$probbase.gibbs
     levels.gibbs  <- results$levels.gibbs
     if(!is.null(subpop)){
     	names(csmf.sub) <- subpop_order_list
@@ -1627,28 +1627,28 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
     	## if with subgroup
     	##
     	if(!is.null(subpop)){
-    		# set p.hat to NULL, and set up csmf.sub.all as a list of p.hat 
+    		# set p.hat to NULL, and set up csmf.sub.all as a list of p.hat
     		p.hat <- NULL
     		csmf.sub.all <- vector("list", N_sub.j)
     		names(csmf.sub.all) <- subpop_order_list
     		# iterate over all subpopulation
     		for(j in 1:length(csmf.sub)){
-    			# initialize the csmf matrix 
-    			csmf.sub.all[[j]] <- matrix(0, 
-    				dim(csmf.sub[[j]])[1], 
+    			# initialize the csmf matrix
+    			csmf.sub.all[[j]] <- matrix(0,
+    				dim(csmf.sub[[j]])[1],
     				C.j + length(external.causes))
-    			# rescale the non-external CSMF once the external causes are added 
+    			# rescale the non-external CSMF once the external causes are added
     			rescale <- length(sublist[[j]]) / (length(sublist[[j]]) + length(which(externals$ext.sub == subpop_order_list[j])))
     			temp <- csmf.sub[[j]] * rescale
-    					
-    			# combine the rescaled non-external CSMF with the external CSMF	
-    			csmf.sub.all[[j]]  <- cbind(temp[, 1:(ext1 - 1)], 
-				    						matrix(externals$ext.csmf[[j]], 
+
+    			# combine the rescaled non-external CSMF with the external CSMF
+    			csmf.sub.all[[j]]  <- cbind(temp[, 1:(ext1 - 1)],
+				    						matrix(externals$ext.csmf[[j]],
 				    						  	   dim(temp)[1],
-				    						  	   length(external.causes), 
-				    						  	   byrow = TRUE), 
+				    						  	   length(external.causes),
+				    						  	   byrow = TRUE),
 				    						temp[, ext1:C.j])
-				csmf.sub.all[[j]][is.nan(csmf.sub.all[[j]])] <- 0    							
+				csmf.sub.all[[j]][is.nan(csmf.sub.all[[j]])] <- 0
     		}
     		csmf.sub <- csmf.sub.all
     	##
@@ -1661,27 +1661,27 @@ ParseResult <- function(N_sub.j, C.j, S.j, N_level.j, pool.j, fit){
     		p.hat <- cbind(p.hat[, 1:(ext1 - 1)], extra, temp)
     	}
 
-    	p.indiv <- cbind(p.indiv[, 1:(ext1 - 1)], 
-    						  matrix(0, dim(p.indiv)[1], length(external.causes)), 
+    	p.indiv <- cbind(p.indiv[, 1:(ext1 - 1)],
+    						  matrix(0, dim(p.indiv)[1], length(external.causes)),
     						  p.indiv[, (ext1:C.j)])
-    	
+
     	p.indiv.ext <- matrix(0, nrow = length(externals$ext.id), ncol = C.j + length(external.causes) )
     	if(length(externals$ext.id) > 0){
     		# WHO 2012
     		if(is.null(externals$ext.prob)){
-	    		for(i in 1:length(externals$ext.id)){p.indiv.ext[i, externals$ext.cod[i]] <- 1}    
-    		# WHO 2016	
+	    		for(i in 1:length(externals$ext.id)){p.indiv.ext[i, externals$ext.cod[i]] <- 1}
+    		# WHO 2016
     		}else{
 				p.indiv.ext[, external.causes] <- externals$ext.prob
     		}
-		
+
     	}
-    	p.indiv <- rbind(p.indiv, p.indiv.ext) 
+    	p.indiv <- rbind(p.indiv, p.indiv.ext)
     	p.indiv[is.nan(p.indiv)] <- 0
     	id <- c(id, externals$ext.id)
     	subpop <- c(subpop, externals$ext.sub)
    }
-##---------------------------------------------------------------##    	
+##---------------------------------------------------------------##
 ## add column names to outcome
 if(pool.j != 0){
 	##======= CHECK THIS CHUNK ===========##
@@ -1691,11 +1691,11 @@ if(pool.j != 0){
 		# remove external
 		valabels <- valabels[-external.symps]
 		vacauses.ext <- vacauses[-external.causes]
-	    # remove missing, sequential deleting since that's 
+	    # remove missing, sequential deleting since that's
 	    #   how we obtained the indices before
 		valabels <- valabels[-missing.all]
 		dimnames(probbase.gibbs)[[2]] <- valabels
-		dimnames(probbase.gibbs)[[3]] <- vacauses.ext		
+		dimnames(probbase.gibbs)[[3]] <- vacauses.ext
 	}else{
 		dimnames(probbase.gibbs)[[2]] <- valabels
 		dimnames(probbase.gibbs)[[3]] <- vacauses
@@ -1704,12 +1704,12 @@ if(pool.j != 0){
 }else{
 	if(customization.dev){
 		# colnames(levels.gibbs) <- rev(table.dev[level.exist])
-		colnames(levels.gibbs) <- table.dev[level.exist]		
+		colnames(levels.gibbs) <- table.dev[level.exist]
 	}else{
 		colnames(levels.gibbs) <- c("I", "A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "E", "N")
 	}
 	probbase.gibbs <- levels.gibbs
-} 
+}
 if(!is.null(subpop)){
 	  for(j in 1:length(csmf.sub)){colnames(csmf.sub[[j]]) <- vacauses}
 	  p.hat <- csmf.sub
@@ -1718,7 +1718,7 @@ if(!is.null(subpop)){
 }
 colnames(p.indiv) <- vacauses
 rownames(p.indiv) <- id
-##---------------------------------------------------------------------------------##    	
+##---------------------------------------------------------------------------------##
 if(!updateCondProb){
     	probbase.gibbs <- NULL
 }
@@ -1731,29 +1731,29 @@ out <- list(
 		id = id,
 		data.final = cleandata,
 		data.checked = data.checked,
-	    indiv.prob = p.indiv, 
+	    indiv.prob = p.indiv,
 		csmf = p.hat,
 		conditional.probs = probbase.gibbs,
 		probbase = prob.orig,
 		missing.symptoms = missing.all,
-		external = external.sep, 
+		external = external.sep,
 		external.causes = external.causes,
 		impossible.causes = impossible,
-	
-		updateCondProb = updateCondProb, 
-		keepProbbase.level = keepProbbase.level, 
+
+		updateCondProb = updateCondProb,
+		keepProbbase.level = keepProbbase.level,
 		datacheck = datacheck,
-		Nsim = Nsim, 
-		thin = thin, 
-		burnin = burnin, 
-	
-		jump.scale = jump.scale, 
-		levels.prior = levels.prior, 
-		levels.strength = levels.strength, 
-		trunc.min = trunc.min, 
-		trunc.max = trunc.max, 
-		subpop = subpop, 
-		indiv.CI = indiv.CI, 
+		Nsim = Nsim,
+		thin = thin,
+		burnin = burnin,
+
+		jump.scale = jump.scale,
+		levels.prior = levels.prior,
+		levels.strength = levels.strength,
+		trunc.min = trunc.min,
+		trunc.max = trunc.max,
+		subpop = subpop,
+		indiv.CI = indiv.CI,
 		is.customized = customization.dev,
 		errors = errorlog,
 		warning = warning,
@@ -1764,11 +1764,11 @@ if(!is.null(indiv.CI)){
 	indiv <- get.indiv(data = NULL, object = out, indiv.CI)
 	out$indiv.prob.median <- indiv$median
 	out$indiv.prob.upper <- indiv$upper
-	out$indiv.prob.lower <- indiv$lower			
+	out$indiv.prob.lower <- indiv$lower
 }
-class(out) <- "insilico"
-return(out)  	
-} 
+# class(out) <- "insilico"
+return(out)
+}
 
 #' Message to set heap size for Java
 #' @keywords internal
