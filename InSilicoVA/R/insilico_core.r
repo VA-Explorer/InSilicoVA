@@ -1767,7 +1767,7 @@ if(!is.null(indiv.CI)){
 	out$indiv.prob.lower <- indiv$lower
 }
 # class(out) <- "insilico"
-return(out)
+return(list(results=out, errors=errorlog, warnings=warning))
 }
 
 #' Message to set heap size for Java

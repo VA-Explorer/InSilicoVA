@@ -71,7 +71,7 @@ insilico <- function(data, data.type = c("WHO2012", "WHO2016")[1], sci = NULL, i
 						CondProbNum = CondProbNum,
 						datacheck = datacheck,
 						datacheck.missing = datacheck.missing,
-						warning.write = warning.write,
+						warning.write = TRUE, #track warnings for microservice
 						directory = directory,
 						external.sep = external.sep,
 						Nsim = Nsim,
